@@ -6,6 +6,8 @@
 #include <cstdint>
 #include <cstdlib>
 #include <cstdio>
+#include <cmath>
+#include <ctime>
 #include <iostream>
 
 template <typename ITYPE, typename RTYPE>
@@ -54,6 +56,18 @@ class Array
         void remove(ITYPE index);
         // print
         void print() const;
+
+    // Compute methods:
+        // Dot product
+        RTYPE dotProduct(const Array<ITYPE, RTYPE> &other);
+
+    // Norms:
+        // maxNorm
+        RTYPE maxNorm();
+        // sumNorm
+        RTYPE sumNorm();
+        // Eucledean norm
+        RTYPE euclideanNorm();
 
     // Operators:
         // Access operator

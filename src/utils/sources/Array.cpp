@@ -23,6 +23,10 @@ void Array<ITYPE, RTYPE>::handleError(int errorCode)
             exit(EXIT_FAILURE);
         case 6:
             printf("--| SEVERE: Cannot set data for an empty array. Aborting...\n");
+            exit(EXIT_FAILURE);
+        case 7:
+            printf("--| SEVERE: Matrix is not square. Aborting...\n");
+            exit(EXIT_FAILURE);
         default:
             break;
     }
@@ -241,6 +245,66 @@ void Array<ITYPE, RTYPE>::print() const
         std::cout << "  arrData[" << i << "] = " << arrData[i] << std::endl;
     }
     std::cout << "End of array." << std::endl;
+}
+
+// Compute methods:
+
+// Dot product
+template <typename ITYPE, typename RTYPE>
+RTYPE Array<ITYPE, RTYPE>::dotProduct(const Array<ITYPE, RTYPE> &other)
+{
+    // Check for size compatibility
+    if (arrSize != other.arrSize)
+    {
+        errorCode = 2; // Set error code for size mismatch
+        handleError(errorCode);
+    }
+
+    RTYPE result = static_cast<RTYPE>(0);
+    double tmp = 0.0;
+    for (ITYPE i = 0; i < arrSize; ++i)
+    {
+        tmp += (double)(arrData[i] * other.arrData[i]);
+    }
+    result = static_cast<RTYPE>(tmp);
+    return result;
+}
+
+// Norms:
+
+// Max norm
+template <typename ITYPE, typename RTYPE>
+RTYPE Array<ITYPE, RTYPE>::maxNorm()
+{
+    RTYPE maxVal = static_cast<RTYPE>(0);
+    for (ITYPE i = 0; i < arrSize; ++i)
+    {
+        RTYPE val = abs(arrData[i]);
+        maxVal = std::max(maxVal, val);
+    }
+    return maxVal;
+}
+
+// Sum norm
+template <typename ITYPE, typename RTYPE>
+RTYPE Array<ITYPE, RTYPE>::sumNorm()
+{
+    RTYPE sumVal = static_cast<RTYPE>(0);
+    double tmp = 0.0;
+    for (ITYPE i = 0; i < arrSize; ++i)
+    {
+        tmp += static_cast<double>(abs(arrData[i]));
+    }
+    sumVal = static_cast<RTYPE>(tmp);
+    return sumVal;
+}
+
+// Euclidean norm
+template <typename ITYPE, typename RTYPE>
+RTYPE Array<ITYPE, RTYPE>::euclideanNorm()
+{
+    RTYPE sumSquares = dotProduct(*this);
+    return sqrt(sumSquares);
 }
 
 // Operators:

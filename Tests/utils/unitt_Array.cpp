@@ -209,5 +209,128 @@ int main()
         std::cout << "Assignment operator works." << std::endl;
     }
 
+    // Test 11: verify the addition operator
+    {
+        uint32_t size1 = 5;
+        Array<uint32_t, float> testArray1(size1);
+        Array<uint32_t, float> testArray2(size1);
+        for (uint32_t i = 0; i < size1; ++i)
+        {
+            testArray1[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+            testArray2[i] = static_cast<float>(i) + 2.0f; // Fill with some values
+        }
+        Array<uint32_t, float> sumArray = testArray1 + testArray2;
+        sumArray.print();
+        for (uint32_t i = 0; i < size1; ++i)
+        {
+            if (sumArray[i] != (testArray1[i] + testArray2[i]))
+            {
+                std::cout << "Addition operator failed at index " << i << ". Expected: " << (testArray1[i] + testArray2[i]) << ", got: " << sumArray[i] << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+        std::cout << "Addition operator works." << std::endl;
+    }
+
+    // Test 12: verify the accumulation operator
+    {
+        uint32_t size1 = 5;
+        Array<uint32_t, float> testArray1(size1);
+        Array<uint32_t, float> testArray2(size1);
+        for (uint32_t i = 0; i < size1; ++i)
+        {
+            testArray1[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+            testArray2[i] = static_cast<float>(i) + 2.0f; // Fill with some values
+        }
+        testArray1 += testArray2;
+        testArray1.print();
+        for (uint32_t i = 0; i < size1; ++i)
+        {
+            if (testArray1[i] != (static_cast<float>(i) + 1.0f + testArray2[i]))
+            {
+                std::cout << "Accumulation operator failed at index " << i << ". Expected: " << (static_cast<float>(i) + 1.0f + testArray2[i]) << ", got: " << testArray1[i] << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+        std::cout << "Accumulation operator works." << std::endl;
+    }
+
+    // Test 13: verify the dot prodcut
+    {
+        uint32_t size1 = 10000;
+        uint64_t expectedResult = 0;
+        Array<uint32_t, float> testArray1(size1);
+        Array<uint32_t, float> testArray2(size1);
+        for (uint32_t i = 0; i < size1; ++i)
+        {
+            testArray1[i] = static_cast<float>(1);
+            testArray2[i] = static_cast<float>(i+1);
+            expectedResult += (1 * (i + 1));
+        }
+        std::cout << "Expected dot product result: " << expectedResult << std::endl;
+        float dotResult = testArray1.dotProduct(testArray2);
+        std::cout << "Dot product result: " << dotResult << std::endl;
+        if (dotResult != static_cast<float>(expectedResult))
+        {
+            std::cout << "Dot product failed. Expected: " << expectedResult << ", got: " << dotResult << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        std::cout << "Dot product works." << std::endl;
+    }
+
+    // Test 14: verify the max norm
+    {
+        uint32_t size1 = 10;
+        Array<uint32_t, float> testArray(size1);
+        for (uint32_t i = 0; i < size1; ++i)
+        {
+            testArray[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+        }
+        float maxNormValue = testArray.maxNorm();
+        std::cout << "Max norm value: " << maxNormValue << std::endl;
+        if (maxNormValue != 10.0f)
+        {
+            std::cout << "Max norm failed. Expected: 10.0, got: " << maxNormValue << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        std::cout << "Max norm works." << std::endl;
+    }
+
+    // Test 15: verify the sum norm
+    {
+        uint32_t size1 = 10;
+        Array<uint32_t, float> testArray(size1);
+        for (uint32_t i = 0; i < size1; ++i)
+        {
+            testArray[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+        }
+        float sumNormValue = testArray.sumNorm();
+        std::cout << "Sum norm value: " << sumNormValue << std::endl;
+        if (sumNormValue != 55.0f) // Sum of first 10 natural numbers
+        {
+            std::cout << "Sum norm failed. Expected: 55.0, got: " << sumNormValue << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        std::cout << "Sum norm works." << std::endl;
+    }
+
+    // Test 16: verify the euclidean norm
+    {
+        uint32_t size1 = 10;
+        Array<uint32_t, float> testArray(size1);
+        for (uint32_t i = 0; i < size1; ++i)
+        {
+            testArray[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+        }
+        float euclideanNormValue = testArray.euclideanNorm();
+        std::cout << "Euclidean norm value: " << euclideanNormValue << std::endl;
+        if (euclideanNormValue != std::sqrt(385.0f)) // sqrt(1^2 + 2^2 + ... + 10^2)
+        {
+            std::cout << "Euclidean norm failed. Expected: " << std::sqrt(385.0f) << ", got: " << euclideanNormValue << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        std::cout << "Euclidean norm works." << std::endl;
+    }
+
     return 0;
 }

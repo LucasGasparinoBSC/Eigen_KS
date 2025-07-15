@@ -196,6 +196,228 @@ void Matrix<ITYPE, RTYPE>::addColumn(ITYPE &iCol, RTYPE *data)
     this->arrData = newData;
 }
 
+// TODO: Implement the removeRow method
+// TODO: Implement the removeColumn method
+
+// Transpose the matrix
+template <typename ITYPE, typename RTYPE>
+Matrix<ITYPE, RTYPE> Matrix<ITYPE, RTYPE>::transpose()
+{
+    // Create a new Matrix object for the transposed matrix
+    Matrix<ITYPE, RTYPE> transposed(nCols, nRows);
+
+    for (ITYPE i = 0; i < nRows; ++i)
+    {
+        for (ITYPE j = 0; j < nCols; ++j)
+        {
+            transposed(j, i) = this->arrData[i * nCols + j];
+        }
+    }
+
+    return transposed;
+}
+
+// Trace: returns the sum of the diagonal elements
+template <typename ITYPE, typename RTYPE>
+RTYPE Matrix<ITYPE, RTYPE>::trace()
+{
+    // Check if the matrix is square
+    if (nRows != nCols)
+    {
+        this->errorCode = 7;
+        this->handleError(this->errorCode);
+    }
+
+    RTYPE traceSum = static_cast<RTYPE>(0);
+    double tmp = 0.0;
+    for (ITYPE i = 0; i < nRows; ++i)
+    {
+        tmp += static_cast<double>(this->arrData[i * nCols + i]);
+    }
+    traceSum = static_cast<RTYPE>(tmp);
+    return traceSum;
+}
+
+// Double inner product: given two matrices, returns a scalar
+template <typename ITYPE, typename RTYPE>
+RTYPE Matrix<ITYPE, RTYPE>::doubleInnerProduct(const Matrix<ITYPE, RTYPE> &other)
+{
+    // Check for size compatibility
+    if (nRows != other.nRows || nCols != other.nCols)
+    {
+        this->errorCode = 2; // Set error code for size mismatch
+        this->handleError(this->errorCode);
+    }
+
+    RTYPE result = static_cast<RTYPE>(0);
+    double tmp = 0.0;
+    for (ITYPE i = 0; i < nRows; ++i)
+    {
+        for (ITYPE j = 0; j < nCols; ++j)
+        {
+            tmp += static_cast<double>(this->arrData[i * nCols + j] * other.arrData[i * other.nCols + j]);
+        }
+    }
+    result = static_cast<RTYPE>(tmp);
+    return result;
+}
+
+// Outer product: given two Arrays, returns a new Matrix object
+template <typename ITYPE, typename RTYPE>
+Matrix<ITYPE, RTYPE> Matrix<ITYPE, RTYPE>::outerProduct(const Array<ITYPE, RTYPE> &vec1, const Array<ITYPE, RTYPE> &vec2)
+{
+    // Check for size compatibility
+    if (vec1.size() == 0 || vec2.size() == 0)
+    {
+        this->errorCode = 1; // Set error code for invalid array size
+        this->handleError(this->errorCode);
+    }
+
+    nRows = vec1.size();
+    nCols = vec2.size();
+
+    // Create a new Matrix object for the outer product
+    Matrix<ITYPE, RTYPE> result(nRows, nCols);
+
+    for (ITYPE i = 0; i < vec1.size(); ++i)
+    {
+        for (ITYPE j = 0; j < vec2.size(); ++j)
+        {
+            result(i, j) = vec1[i] * vec2[j];
+        }
+    }
+
+    return result;
+}
+
+// Matrix-vector multiplication, returns a new Array object
+template <typename ITYPE, typename RTYPE>
+Array<ITYPE, RTYPE> Matrix<ITYPE, RTYPE>::MatrixVectorProduct(const Array<ITYPE, RTYPE> &vec)
+{
+    // Check for size compatibility
+    if (nCols != vec.size())
+    {
+        this->errorCode = 2; // Set error code for size mismatch
+        this->handleError(this->errorCode);
+    }
+
+    // Create a new Array object for the result
+    Array<ITYPE, RTYPE> result(nRows);
+
+    for (ITYPE i = 0; i < nRows; ++i)
+    {
+        double tmp = 0.0;
+        for (ITYPE j = 0; j < nCols; ++j)
+        {
+            tmp += static_cast<double>(this->arrData[i * nCols + j] * vec[j]);
+        }
+        result[i] = static_cast<RTYPE>(tmp);
+    }
+    return result;
+}
+
+// Matrix-matrix multiplication, returns a new Matrix object
+template <typename ITYPE, typename RTYPE>
+Matrix<ITYPE, RTYPE> Matrix<ITYPE, RTYPE>::MatrixMatrixProduct(const Matrix<ITYPE, RTYPE> &other)
+{
+    // Check for size compatibility
+    if (nCols != other.nRows)
+    {
+        this->errorCode = 2; // Set error code for size mismatch
+        this->handleError(this->errorCode);
+    }
+
+    // Create a new Matrix object for the result
+    nRows = this->nRows;
+    nCols = other.nCols;
+    Matrix<ITYPE, RTYPE> result(nRows, nCols);
+
+    for (ITYPE i = 0; i < nRows; ++i)
+    {
+        for (ITYPE j = 0; j < nCols; ++j)
+        {
+            double tmp = 0.0;
+            for (ITYPE k = 0; k < other.nRows; ++k)
+            {
+                tmp += static_cast<double>(this->arrData[i * this->nCols + k] * other.arrData[k * other.nCols + j]);
+            }
+            result(i, j) = static_cast<RTYPE>(tmp);
+        }
+    }
+    return result;
+}
+
+// Norms:
+
+// row-sum norm (pInf)
+template <typename ITYPE, typename RTYPE>
+RTYPE Matrix<ITYPE, RTYPE>::rowSumNorm()
+{
+    RTYPE maxRowSum = static_cast<RTYPE>(0);
+    for (ITYPE i = 0; i < nRows; ++i)
+    {
+        double rowSum = 0.0;
+        for (ITYPE j = 0; j < nCols; ++j)
+        {
+            rowSum += static_cast<double>(abs(this->arrData[i * nCols + j]));
+        }
+        maxRowSum = std::max(maxRowSum, static_cast<RTYPE>(rowSum));
+    }
+    return maxRowSum;
+}
+
+// column-sum norm (p1)
+template <typename ITYPE, typename RTYPE>
+RTYPE Matrix<ITYPE, RTYPE>::colSumNorm()
+{
+    RTYPE maxColSum = static_cast<RTYPE>(0);
+    for (ITYPE j = 0; j < nCols; ++j)
+    {
+        double colSum = 0.0;
+        for (ITYPE i = 0; i < nRows; ++i)
+        {
+            colSum += static_cast<double>(abs(this->arrData[i * nCols + j]));
+        }
+        maxColSum = std::max(maxColSum, static_cast<RTYPE>(colSum));
+    }
+    return maxColSum;
+}
+
+// Spectral norm (p2)
+template <typename ITYPE, typename RTYPE>
+RTYPE Matrix<ITYPE, RTYPE>::spectralNorm()
+{
+    // Since it depends on matrix eigenvalues, implementation is postponed
+    std::cerr << "--| SEVERE: Spectral norm calculation is not implemented yet." << std::endl;
+    exit(EXIT_FAILURE);
+}
+
+// Frobenius norm (pF)
+template <typename ITYPE, typename RTYPE>
+RTYPE Matrix<ITYPE, RTYPE>::frobeniusNorm()
+{
+    RTYPE matSquare = doubleInnerProduct(*this);
+    return sqrt(matSquare);
+}
+
+// max-norm (pMax)
+template <typename ITYPE, typename RTYPE>
+RTYPE Matrix<ITYPE, RTYPE>::maxNorm()
+{
+    RTYPE maxElement = static_cast<RTYPE>(0);
+    for (ITYPE i = 0; i < nRows; ++i)
+    {
+        for (ITYPE j = 0; j < nCols; ++j)
+        {
+            RTYPE val = this->arrData[i * nCols + j];
+            val = abs(val);
+            // Pick the maximum between the current max and the absolute value of the current element
+            maxElement = std::max(maxElement, val);
+        }
+    }
+    return maxElement;
+}
+
 // Retrieve a row as an Array object
 template <typename ITYPE, typename RTYPE>
 Array<ITYPE, RTYPE> Matrix<ITYPE, RTYPE>::getRow(ITYPE &rowIndex)

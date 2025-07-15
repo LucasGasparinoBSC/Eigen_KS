@@ -241,6 +241,28 @@ int main()
         std::cout << "Access operator works." << std::endl;
     }
 
+    // Test ?: verify the assignment operator
+    {
+        uint32_t rows = 3, cols = 3;
+        Matrix<uint32_t, float> testMatrix1(rows, cols);
+        for (uint32_t i = 0; i < rows * cols; ++i)
+        {
+            testMatrix1[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+        }
+        Matrix<uint32_t, float> testMatrix2;
+        testMatrix2 = testMatrix1;
+        testMatrix2.print();
+        for (uint32_t i = 0; i < rows * cols; ++i)
+        {
+            if (testMatrix2[i] != testMatrix1[i])
+            {
+                std::cout << "Assignment operator failed at index " << i << ". Expected: " << testMatrix1[i] << ", got: " << testMatrix2[i] << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+        std::cout << "Assignment operator works." << std::endl;
+    }
+
     // Test ?: verify the pointwise sum operator
     {
         uint32_t rows = 3, cols = 3;
@@ -285,6 +307,285 @@ int main()
             }
         }
         std::cout << "Pointwise accumulation operator works." << std::endl;
+    }
+
+    // Test ?: verify the transpose method
+    {
+        uint32_t rows = 3, cols = 4;
+        Matrix<uint32_t, float> testMatrix(rows, cols);
+        for (uint32_t i = 0; i < rows * cols; ++i)
+        {
+            testMatrix[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+        }
+        testMatrix.print();
+        Matrix<uint32_t, float> transposedMatrix = testMatrix.transpose();
+        transposedMatrix.print();
+        for (uint32_t i = 0; i < cols; ++i)
+        {
+            for (uint32_t j = 0; j < rows; ++j)
+            {
+                if (transposedMatrix(i, j) != testMatrix(j, i))
+                {
+                    std::cout << "Transpose method failed at (" << i << ", " << j << "). Expected: " << testMatrix(j, i) << ", got: " << transposedMatrix(i, j) << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+            }
+        }
+        std::cout << "Transpose method works." << std::endl;
+    }
+
+    // Test ?: verify the trace method
+    {
+        uint32_t size = 3;
+        Matrix<uint32_t, float> testMatrix(size, size);
+        for (uint32_t i = 0; i < size * size; ++i)
+        {
+            testMatrix[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+        }
+        testMatrix.print();
+        float traceValue = testMatrix.trace();
+        std::cout << "Trace value: " << traceValue << std::endl;
+        float expectedTrace = 1.0f + 5.0f + 9.0f; // Diagonal elements
+        if (traceValue != expectedTrace)
+        {
+            std::cout << "Trace method failed. Expected: " << expectedTrace << ", got: " << traceValue << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        std::cout << "Trace method works." << std::endl;
+    }
+
+    // Test ?: verify the double inner product method
+    {
+        uint32_t rows = 3, cols = 3;
+        Matrix<uint32_t, float> testMatrix1(rows, cols);
+        Matrix<uint32_t, float> testMatrix2(rows, cols);
+        for (uint32_t i = 0; i < rows * cols; ++i)
+        {
+            testMatrix1[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+            testMatrix2[i] = static_cast<float>(i) + 2.0f; // Fill with some values
+        }
+        float innerProductValue = testMatrix1.doubleInnerProduct(testMatrix2);
+        std::cout << "Double inner product value: " << innerProductValue << std::endl;
+        float expectedInnerProduct = 0.0f;
+        for (uint32_t i = 0; i < rows * cols; ++i)
+        {
+            expectedInnerProduct += testMatrix1[i] * testMatrix2[i];
+        }
+        if (innerProductValue != expectedInnerProduct)
+        {
+            std::cout << "Double inner product method failed. Expected: " << expectedInnerProduct << ", got: " << innerProductValue << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        std::cout << "Double inner product method works." << std::endl;
+    }
+
+    // Test ?: verify the outer product method
+    {
+        uint32_t size = 3;
+        Array<uint32_t, float> vec1(size);
+        Array<uint32_t, float> vec2(size);
+        for (uint32_t i = 0; i < size; ++i)
+        {
+            vec1[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+            vec2[i] = static_cast<float>(i) + 2.0f; // Fill with some values
+        }
+        Matrix<uint32_t, float> outerProductMatrix = outerProductMatrix.outerProduct(vec1, vec2);
+        outerProductMatrix.print();
+        for (uint32_t i = 0; i < size; ++i)
+        {
+            for (uint32_t j = 0; j < size; ++j)
+            {
+                float expectedValue = vec1[i] * vec2[j];
+                if (outerProductMatrix(i, j) != expectedValue)
+                {
+                    std::cout << "Outer product method failed at (" << i << ", " << j << "). Expected: " << expectedValue << ", got: " << outerProductMatrix(i, j) << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+            }
+        }
+        std::cout << "Outer product method works." << std::endl;
+    }
+
+    // Test ?: verify the MatrixVectorProduct method
+    {
+        uint32_t rows = 3, cols = 3;
+        Matrix<uint32_t, float> testMatrix(rows, cols);
+        Array<uint32_t, float> vec(rows);
+        for (uint32_t i = 0; i < rows * cols; ++i)
+        {
+            testMatrix[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+        }
+        for (uint32_t i = 0; i < rows; ++i)
+        {
+            vec[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+        }
+        Array<uint32_t, float> resultArray = testMatrix.MatrixVectorProduct(vec);
+        resultArray.print();
+        for (uint32_t i = 0; i < rows; ++i)
+        {
+            float expectedValue = 0.0f;
+            for (uint32_t j = 0; j < cols; ++j)
+            {
+                expectedValue += testMatrix(i, j) * vec[j];
+            }
+            if (resultArray[i] != expectedValue)
+            {
+                std::cout << "Matrix-vector product method failed at index " << i << ". Expected: " << expectedValue << ", got: " << resultArray[i] << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+        std::cout << "Matrix-vector product method works." << std::endl;
+    }
+
+    // Test ?: verify the MatrixMatrixProduct method
+    {
+        uint32_t rows1 = 3, cols1 = 4;
+        Matrix<uint32_t, float> testMatrix1(rows1, cols1);
+        uint32_t rows2 = 4, cols2 = 5;
+        Matrix<uint32_t, float> testMatrix2(rows2, cols2);
+        for (uint32_t i = 0; i < rows1 * cols1; ++i)
+        {
+            testMatrix1[i] = static_cast<float>(i) + 1.0f;
+        }
+        for (uint32_t i = 0; i < rows2 * cols2; ++i)
+        {
+            testMatrix2[i] = static_cast<float>(i) + 2.0f;
+        }
+        testMatrix1.print();
+        testMatrix2.print();
+        Matrix<uint32_t, float> resultMatrix = testMatrix1.MatrixMatrixProduct(testMatrix2);
+        resultMatrix.print();
+        if (resultMatrix.rows() != rows1 || resultMatrix.cols() != cols2)
+        {
+            std::cout << "Matrix-matrix product method failed. Expected size: " << rows1 << "x" << cols2 << ", got: " << resultMatrix.rows() << "x" << resultMatrix.cols() << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        for (uint32_t i = 0; i < rows1; ++i)
+        {
+            for (uint32_t j = 0; j < cols2; ++j)
+            {
+                float expectedValue = 0.0f;
+                for (uint32_t k = 0; k < cols1; ++k)
+                {
+                    expectedValue += testMatrix1(i, k) * testMatrix2(k, j);
+                }
+                if (resultMatrix(i, j) != expectedValue)
+                {
+                    std::cout << "Matrix-matrix product method failed at (" << i << ", " << j << "). Expected: " << expectedValue << ", got: " << resultMatrix(i, j) << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+            }
+        }
+        std::cout << "Matrix-matrix product method works." << std::endl;
+    }
+
+    // Test ?: verify the rowSumNorm method
+    {
+        uint32_t rows = 3, cols = 3;
+        Matrix<uint32_t, float> testMatrix(rows, cols);
+        for (uint32_t i = 0; i < rows * cols; ++i)
+        {
+            testMatrix[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+        }
+        float rowSumNormValue = testMatrix.rowSumNorm();
+        std::cout << "Row sum norm value: " << rowSumNormValue << std::endl;
+        float expectedRowSumNorm = 0.0f;
+        for (uint32_t i = 0; i < rows; ++i)
+        {
+            float rowSum = 0.0f;
+            for (uint32_t j = 0; j < cols; ++j)
+            {
+                rowSum += testMatrix(i, j);
+            }
+            expectedRowSumNorm = std::max(expectedRowSumNorm, rowSum);
+        }
+        if (rowSumNormValue != expectedRowSumNorm)
+        {
+            std::cout << "Row sum norm method failed. Expected: " << expectedRowSumNorm << ", got: " << rowSumNormValue << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        std::cout << "Row sum norm method works." << std::endl;
+    }
+
+    // Test ?: verify the colSumNorm method
+    {
+        uint32_t rows = 3, cols = 3;
+        Matrix<uint32_t, float> testMatrix(rows, cols);
+        for (uint32_t i = 0; i < rows * cols; ++i)
+        {
+            testMatrix[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+        }
+        float colSumNormValue = testMatrix.colSumNorm();
+        std::cout << "Column sum norm value: " << colSumNormValue << std::endl;
+        float expectedColSumNorm = 0.0f;
+        for (uint32_t j = 0; j < cols; ++j)
+        {
+            float colSum = 0.0f;
+            for (uint32_t i = 0; i < rows; ++i)
+            {
+                colSum += testMatrix(i, j);
+            }
+            expectedColSumNorm = std::max(expectedColSumNorm, colSum);
+        }
+        if (colSumNormValue != expectedColSumNorm)
+        {
+            std::cout << "Column sum norm method failed. Expected: " << expectedColSumNorm << ", got: " << colSumNormValue << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        std::cout << "Column sum norm method works." << std::endl;
+    }
+
+    // Test ?: verify the frobeniusNorm method
+    {
+        uint32_t rows = 3, cols = 3;
+        Matrix<uint32_t, float> testMatrix(rows, cols);
+        for (uint32_t i = 0; i < rows * cols; ++i)
+        {
+            testMatrix[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+        }
+        float frobeniusNormValue = testMatrix.frobeniusNorm();
+        std::cout << "Frobenius norm value: " << frobeniusNormValue << std::endl;
+        float expectedFrobeniusNorm = 0.0f;
+        for (uint32_t i = 0; i < rows; ++i)
+        {
+            for (uint32_t j = 0; j < cols; ++j)
+            {
+                expectedFrobeniusNorm += testMatrix(i, j) * testMatrix(i, j);
+            }
+        }
+        expectedFrobeniusNorm = std::sqrt(expectedFrobeniusNorm);
+        if (frobeniusNormValue != expectedFrobeniusNorm)
+        {
+            std::cout << "Frobenius norm method failed. Expected: " << expectedFrobeniusNorm << ", got: " << frobeniusNormValue << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        std::cout << "Frobenius norm method works." << std::endl;
+    }
+
+    // test ?: verify the maxNorm
+    {
+        uint32_t rows = 3, cols = 3;
+        Matrix<uint32_t, float> testMatrix(rows, cols);
+        for (uint32_t i = 0; i < rows * cols; ++i)
+        {
+            testMatrix[i] = static_cast<float>(i) + 1.0f; // Fill with some values
+        }
+        float maxNormValue = testMatrix.maxNorm();
+        std::cout << "Max norm value: " << maxNormValue << std::endl;
+        float expectedMaxNorm = 0.0f;
+        for (uint32_t i = 0; i < rows; ++i)
+        {
+            for (uint32_t j = 0; j < cols; ++j)
+            {
+                expectedMaxNorm = std::max(expectedMaxNorm, testMatrix(i, j));
+            }
+        }
+        if (maxNormValue != expectedMaxNorm)
+        {
+            std::cout << "Max norm method failed. Expected: " << expectedMaxNorm << ", got: " << maxNormValue << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        std::cout << "Max norm method works." << std::endl;
     }
 
     return 0;

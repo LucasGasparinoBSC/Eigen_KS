@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <cstdlib>
 #include <cstdio>
+#include <cmath>
+#include <ctime>
 #include <iostream>
 #include "Array.h"
 
@@ -18,7 +20,6 @@ class Matrix : public Array<ITYPE, RTYPE>
     protected:
         ITYPE nRows;
         ITYPE nCols;
-
     public:
         // Constructors:
             // Empty constructor
@@ -48,6 +49,34 @@ class Matrix : public Array<ITYPE, RTYPE>
             void addRow(ITYPE &iRow, RTYPE *data);
             // Add a new column
             void addColumn(ITYPE &iCol, RTYPE *data);
+            // Remove a row
+            void removeRow(ITYPE &iRow);
+            // Remove a column
+            void removeColumn(ITYPE &iCol);
+            // Transpose the matrix
+            Matrix<ITYPE, RTYPE> transpose();
+        // Compute methods:
+            // Trace: returns the sum of the diagonal elements
+            RTYPE trace();
+            // Double inner product: given two matrices, returns a scalar
+            RTYPE doubleInnerProduct(const Matrix<ITYPE, RTYPE> &other);
+            // Outer product: given two Arrays, returns a new Matrix object
+            Matrix<ITYPE, RTYPE> outerProduct(const Array<ITYPE, RTYPE> &vec1, const Array<ITYPE, RTYPE> &vec2);
+            // Matrix-vector multiplication, returns a new Array object
+            Array<ITYPE, RTYPE> MatrixVectorProduct(const Array<ITYPE, RTYPE> &vec);
+            // Matrix-matrix multiplication, returns a new Matrix object
+            Matrix<ITYPE, RTYPE> MatrixMatrixProduct(const Matrix<ITYPE, RTYPE> &other);
+        // Norms
+            // row-sum norm (pInf)
+            RTYPE rowSumNorm();
+            // column-sum norm (p1)
+            RTYPE colSumNorm();
+            // Spectral norm (p2)
+            RTYPE spectralNorm();
+            // Frobenius norm (pF)
+            RTYPE frobeniusNorm();
+            // max-norm (pMax)
+            RTYPE maxNorm();
         // Operators:
             // Row,Col operator: allows accesing elements by row and column
             RTYPE &operator()(ITYPE row, ITYPE col) { return this->arrData[row * nCols + col]; }
