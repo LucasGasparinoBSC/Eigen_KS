@@ -235,7 +235,7 @@ template <typename ITYPE, typename RTYPE>
 void Array<ITYPE, RTYPE>::print() const
 {
     std::cout << "Array size: " << arrSize << std::endl;
-    std::cout << "Array contents: " << arrSize << std::endl;
+    std::cout << "Array contents: " << std::endl;
     for (ITYPE i = 0; i < arrSize; ++i)
     {
         std::cout << "  arrData[" << i << "] = " << arrData[i] << std::endl;
@@ -301,6 +301,123 @@ Array<ITYPE, RTYPE> &Array<ITYPE, RTYPE>::operator=(const Array<ITYPE, RTYPE> &o
     for ( ITYPE i = 0; i < arrSize; ++i)
     {
         arrData[i] = other.arrData[i];
+    }
+    return *this;
+}
+
+// Pointwise addition operator
+template <typename ITYPE, typename RTYPE>
+Array<ITYPE, RTYPE> Array<ITYPE, RTYPE>::operator+(const Array<ITYPE, RTYPE> &other)
+{
+    // Check for size compatibility
+    if (arrSize != other.arrSize)
+    {
+        errorCode = 2; // Set error code for size mismatch
+        handleError(errorCode);
+    }
+
+    // Create a new Array object for the result
+    Array<ITYPE, RTYPE> result(arrSize);
+    for (ITYPE i = 0; i < arrSize; ++i)
+    {
+        result.arrData[i] = arrData[i] + other.arrData[i];
+    }
+    return result;
+}
+
+// Pointwise subtraction operator
+template <typename ITYPE, typename RTYPE>
+Array<ITYPE, RTYPE> Array<ITYPE, RTYPE>::operator-(const Array<ITYPE, RTYPE> &other)
+{
+    // Check for size compatibility
+    if (arrSize != other.arrSize)
+    {
+        errorCode = 2; // Set error code for size mismatch
+        handleError(errorCode);
+    }
+
+    // Create a new Array object for the result
+    Array<ITYPE, RTYPE> result(arrSize);
+    for (ITYPE i = 0; i < arrSize; ++i)
+    {
+        result.arrData[i] = arrData[i] - other.arrData[i];
+    }
+    return result;
+}
+
+// Pointwise multiplication operator
+template <typename ITYPE, typename RTYPE>
+Array<ITYPE, RTYPE> Array<ITYPE, RTYPE>::operator*(const Array<ITYPE, RTYPE> &other)
+{
+    // Check for size compatibility
+    if (arrSize != other.arrSize)
+    {
+        errorCode = 2; // Set error code for size mismatch
+        handleError(errorCode);
+    }
+
+    // Create a new Array object for the result
+    Array<ITYPE, RTYPE> result(arrSize);
+    for (ITYPE i = 0; i < arrSize; ++i)
+    {
+        result.arrData[i] = arrData[i] * other.arrData[i];
+    }
+    return result;
+}
+
+// Pointwise accumulation operator
+template <typename ITYPE, typename RTYPE>
+Array<ITYPE, RTYPE> &Array<ITYPE, RTYPE>::operator+=(const Array<ITYPE, RTYPE> &other)
+{
+    // Check for size compatibility
+    if (arrSize != other.arrSize)
+    {
+        errorCode = 2; // Set error code for size mismatch
+        handleError(errorCode);
+    }
+
+    // Perform pointwise accumulation
+    for (ITYPE i = 0; i < arrSize; ++i)
+    {
+        arrData[i] += other.arrData[i];
+    }
+    return *this;
+}
+
+// Pointwise reduction operator
+template <typename ITYPE, typename RTYPE>
+Array<ITYPE, RTYPE> &Array<ITYPE, RTYPE>::operator-=(const Array<ITYPE, RTYPE> &other)
+{
+    // Check for size compatibility
+    if (arrSize != other.arrSize)
+    {
+        errorCode = 2; // Set error code for size mismatch
+        handleError(errorCode);
+    }
+
+    // Perform pointwise reduction
+    for (ITYPE i = 0; i < arrSize; ++i)
+    {
+        arrData[i] -= other.arrData[i];
+    }
+    return *this;
+}
+
+// Pointwise self-product operator
+template <typename ITYPE, typename RTYPE>
+Array<ITYPE, RTYPE> &Array<ITYPE, RTYPE>::operator*=(const Array<ITYPE, RTYPE> &other)
+{
+    // Check for size compatibility
+    if (arrSize != other.arrSize)
+    {
+        errorCode = 2; // Set error code for size mismatch
+        handleError(errorCode);
+    }
+
+    // Perform pointwise self-product
+    for (ITYPE i = 0; i < arrSize; ++i)
+    {
+        arrData[i] *= other.arrData[i];
     }
     return *this;
 }

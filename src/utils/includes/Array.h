@@ -43,7 +43,7 @@ class Array
         // Set data pointer
         void setData(ITYPE &n, RTYPE *data);
 
-        // Methods:
+    // Methods:
         // Resize
         void resize(ITYPE newSize);
         // Append
@@ -64,6 +64,18 @@ class Array
         Array<ITYPE, RTYPE> operator()(ITYPE start, ITYPE end);
         // Assignment operator
         Array<ITYPE, RTYPE> &operator=(const Array<ITYPE, RTYPE> &other);
+        // Pointwise addition operator
+        Array<ITYPE, RTYPE> operator+(const Array<ITYPE, RTYPE> &other);
+        // Pointwise subtraction operator
+        Array<ITYPE, RTYPE> operator-(const Array<ITYPE, RTYPE> &other);
+        // Pointwise multiplication operator
+        Array<ITYPE, RTYPE> operator*(const Array<ITYPE, RTYPE> &other);
+        // Pointwise accumulation operator
+        Array<ITYPE, RTYPE> &operator+=(const Array<ITYPE, RTYPE> &other);
+        // Pointwise reduction operator
+        Array<ITYPE, RTYPE> &operator-=(const Array<ITYPE, RTYPE> &other);
+        // Pointwise self-product operator
+        Array<ITYPE, RTYPE> &operator*=(const Array<ITYPE, RTYPE> &other);
 };
 
 #endif
