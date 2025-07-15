@@ -55,6 +55,8 @@ class Matrix : public Array<ITYPE, RTYPE>
             void removeColumn(ITYPE &iCol);
             // Transpose the matrix
             Matrix<ITYPE, RTYPE> transpose();
+            // Determinant: returns the determinant of the matrix
+            RTYPE determinant();
         // Compute methods:
             // Trace: returns the sum of the diagonal elements
             RTYPE trace();
