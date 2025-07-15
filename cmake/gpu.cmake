@@ -9,7 +9,7 @@ function(set_cc)
         OUTPUT_VARIABLE GPU_CC
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-    message("GPU compute capability detected: cc" ${GPU_CC})
+    message("-- GPU compute capability detected: cc" ${GPU_CC})
     set(GPU_CC ${GPU_CC} PARENT_SCOPE)
 endfunction()
 
@@ -25,6 +25,6 @@ function(set_cuda)
         OUTPUT_VARIABLE GPU_CUDA
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-    message("CUDA version detected: " ${GPU_CUDA})
+    message("-- CUDA version detected: " ${GPU_CUDA})
     set(GPU_CUDA ${GPU_CUDA} PARENT_SCOPE)
 endfunction()

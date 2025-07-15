@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.15)
 # Options
 option(UNIT_TESTING "Enable unit tests" ON)
 option(USE_MN5 "Optimize for MN5" OFF)
+option(USE_GPU "Enable GPU support" ON)
 
 # Folder with files configuring extra CMake options
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -12,7 +13,11 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set(ENV{CXX} "mpicxx")
 
 # Set project name, version and languages
-project(Eigen_KS LANGUAGES CXX)
+if(USE_GPU)
+    project(Eigen_KS LANGUAGES CXX CUDA)
+else()
+    project(Eigen_KS LANGUAGES CXX)
+endif()
 
 include(mpi)
 include(gpu)

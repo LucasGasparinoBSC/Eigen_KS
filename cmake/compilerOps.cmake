@@ -19,6 +19,23 @@ set(CMAKE_CXX_FLAGS "")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
+# If GPU usage is enabled, set CUDA flags and options
+if(USE_GPU)
+    message("-- Compiling with GPU support")
+    message(STATUS "CUDA compiler: ${CMAKE_CUDA_COMPILER_ID}")
+    # Set the compute capability and CUDA version
+    set_cc()
+    set_cuda()
+    # Set the CUDA architecture
+    set(CMAKE_CUDA_ARCHITECTURES ${GPU_CC})
+    # Set basic NVCC flags
+    set(CMAKE_CUDA_FLAGS "-E -pg -lineinfo -std=c++${CMAKE_CXX_STANDARD} -res-usage")
+    # Set NVCC debug flags
+    set(CMAKE_CUDA_FLAGS_DEBUG "-g -G -O0 -err-no")
+    # Set NVCC release flags
+    set(CMAKE_CUDA_FLAGS_RELEASE "-O3")
+endif()
+
 # Define specific compiler flags
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     message("-- GNU compiler detected")
@@ -72,3 +89,9 @@ endif()
 string(REPLACE ";" " " CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 string(REPLACE ";" " " CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 string(REPLACE ";" " " CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+
+if(USE_GPU)
+    string(REPLACE ";" " " CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS}")
+    string(REPLACE ";" " " CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG}")
+    string(REPLACE ";" " " CMAKE_CUDA_FLAGS_RELEASE "${CMAKE_CUDA_FLAGS_RELEASE}")
+endif(USE_GPU)
