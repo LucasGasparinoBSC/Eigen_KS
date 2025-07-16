@@ -359,7 +359,7 @@ RTYPE Matrix<ITYPE, RTYPE>::rowSumNorm()
         double rowSum = 0.0;
         for (ITYPE j = 0; j < nCols; ++j)
         {
-            rowSum += static_cast<double>(abs(this->arrData[i * nCols + j]));
+            rowSum += static_cast<double>(std::abs(this->arrData[i * nCols + j]));
         }
         maxRowSum = std::max(maxRowSum, static_cast<RTYPE>(rowSum));
     }
@@ -376,7 +376,7 @@ RTYPE Matrix<ITYPE, RTYPE>::colSumNorm()
         double colSum = 0.0;
         for (ITYPE i = 0; i < nRows; ++i)
         {
-            colSum += static_cast<double>(abs(this->arrData[i * nCols + j]));
+            colSum += static_cast<double>(std::abs(this->arrData[i * nCols + j]));
         }
         maxColSum = std::max(maxColSum, static_cast<RTYPE>(colSum));
     }
@@ -410,7 +410,7 @@ RTYPE Matrix<ITYPE, RTYPE>::maxNorm()
         for (ITYPE j = 0; j < nCols; ++j)
         {
             RTYPE val = this->arrData[i * nCols + j];
-            val = abs(val);
+            val = std::abs(val);
             // Pick the maximum between the current max and the absolute value of the current element
             maxElement = std::max(maxElement, val);
         }

@@ -279,7 +279,7 @@ RTYPE Array<ITYPE, RTYPE>::maxNorm()
     RTYPE maxVal = static_cast<RTYPE>(0);
     for (ITYPE i = 0; i < arrSize; ++i)
     {
-        RTYPE val = abs(arrData[i]);
+        RTYPE val = std::abs(arrData[i]);
         maxVal = std::max(maxVal, val);
     }
     return maxVal;
@@ -293,7 +293,7 @@ RTYPE Array<ITYPE, RTYPE>::sumNorm()
     double tmp = 0.0;
     for (ITYPE i = 0; i < arrSize; ++i)
     {
-        tmp += static_cast<double>(abs(arrData[i]));
+        tmp += static_cast<double>(std::abs(arrData[i]));
     }
     sumVal = static_cast<RTYPE>(tmp);
     return sumVal;

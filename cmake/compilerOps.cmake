@@ -29,7 +29,7 @@ if(USE_GPU)
     # Set the CUDA architecture
     set(CMAKE_CUDA_ARCHITECTURES ${GPU_CC})
     # Set basic NVCC flags
-    set(CMAKE_CUDA_FLAGS "-E -pg -lineinfo -std=c++${CMAKE_CXX_STANDARD} -res-usage")
+    set(CMAKE_CUDA_FLAGS "-pg -lineinfo -std=c++${CMAKE_CXX_STANDARD} -res-usage")
     # Set NVCC debug flags
     set(CMAKE_CUDA_FLAGS_DEBUG "-g -G -O0 -err-no")
     # Set NVCC release flags
